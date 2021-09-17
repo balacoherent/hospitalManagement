@@ -10,10 +10,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
 
@@ -65,36 +61,6 @@ public class JwtUtil {
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public static String generateOTP() {
-        int randomPin = (int) (Math.random() * 9000) + 1000;
-        String otp = String.valueOf(randomPin);
-        return otp;
-    }
-
-    public static String generateHashString() throws Exception {
-
-        String message = String.valueOf(System.currentTimeMillis());
-        StringBuilder sb = new StringBuilder();
-        MessageDigest md;
-
-        try {
-            md = MessageDigest.getInstance("SHA-1");
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
-            md.update(salt);
-
-            byte[] hashedPassword = md.digest(message.getBytes(StandardCharsets.UTF_8));
-
-            for (byte b : hashedPassword)
-                sb.append(String.format("%02x", b));
-
-            return String.valueOf(sb);
-        } catch (NoSuchAlgorithmException e) {
-            return null;
         }
     }
 

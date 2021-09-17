@@ -42,12 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
         http.authorizeRequests()
-                .antMatchers("/hello").permitAll()
+                .antMatchers("/getAll").permitAll()
                 .anyRequest().authenticated().and().formLogin().permitAll();
 
         http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
 
-        // Add our custom JWT security filter
         http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -55,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/user/login","/save");
+                .antMatchers("/user/login","/user/save");
     }
 }
 

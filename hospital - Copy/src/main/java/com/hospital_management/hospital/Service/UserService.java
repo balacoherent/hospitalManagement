@@ -69,36 +69,6 @@ public class UserService implements UserInterface {
         }
     }
 
-   /* @Override
-    public TokenDTO Jwt(TokenDTO tokenDTO) {
-        Optional<User> users = userRepository.findByuserName(tokenDTO.getUserName());
-        try {
-            if (users.isPresent()) {
-                BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-                boolean chek = bcrypt.matches(tokenDTO.getPassword(), users.get().getPassword());
-                if (chek == true) {
-                    String jwtt = generateToken(users.get().getUserId(), "üser", users.get().getUserName());
-                    tokenDTO.setToken(jwtt);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return tokenDTO;
-    }
-
-        public UserDetails loadByUserId(String userId) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByuserName(userId);
-        Optional<User> opt = Optional.ofNullable(user).orElseThrow(
-                        () -> new UsernameNotFoundException("userid not found"))
-                .map(UserDetailImp::new);
-        if (opt.isPresent()) {
-            return (UserDetails) opt.get();
-        }
-        return null;
-
-    }*/
-
     @Override
     public UserSignupRequestVO logOfUser(UserSignupRequestVO userSignupRequestVO) {
         BCryptPasswordEncoder bCrypt = new BCryptPasswordEncoder();
@@ -107,7 +77,7 @@ public class UserService implements UserInterface {
             Optional<User> user = userRepository.findByUserName(userSignupRequestVO.getUserName());
             boolean status = bCrypt.matches(userSignupRequestVO.getPassword(), user.get().getPassword());
             if (user.isPresent() && status == true) {
-                List<UserRole> userRoles = userRoleRepository.findByUserId(user.get().getUserId());
+                Optional<UserRole> userRoles = userRoleRepository.findById(user.get().getUserId());
                 userRoles.stream().forEachOrdered(userRole -> {
                     Role role = userRole.getRole();
                     roles.add(role);
@@ -129,7 +99,7 @@ public class UserService implements UserInterface {
         if (userDetail == null) {
             throw new UsernameNotFoundException("user not found");
         } else {
-            List<UserRole> userRoles = userRoleRepository.findByUserId(userDetail.get().getUserId());
+            Optional<UserRole> userRoles = userRoleRepository.findById(userDetail.get().getUserId());
             userRoles.stream().forEachOrdered(userRole -> {
                 Role role = userRole.getRole();
                 roles.add(role);

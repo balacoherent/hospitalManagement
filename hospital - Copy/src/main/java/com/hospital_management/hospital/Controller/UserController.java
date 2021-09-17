@@ -23,14 +23,6 @@ public class UserController {
     @Autowired
     private UserInterface userInterface;
 
-  /*  @PostMapping("/create")
-
-    public BaseResponseRep<User> addInfo(@RequestBody UserDTO userDTO)   {
-        BaseResponseRep<User> baseResponseRep=null;
-        baseResponseRep = BaseResponseRep.<User>builder().Data(userService.addInfo(userDTO)).build();
-        return baseResponseRep;
-    }*/
-
     @PostMapping(value="/save")
     public BaseResponseRep<User> Saveuser(@RequestBody UserDTO userDTO){
       BaseResponseRep<User> baseResponseRep=null;
@@ -38,27 +30,16 @@ public class UserController {
       return baseResponseRep;
     }
 
-    @GetMapping(value = "/user/login", consumes = {"application/json"})
+    @GetMapping(value = "/login")
     @ApiOperation(value = "user login ")
     public BaseResponseRep<UserSignupRequestVO> logOfUser(@RequestBody UserSignupRequestVO userSignupRequestVO) {
         BaseResponseRep<UserSignupRequestVO> baseResponseRep=null;
         baseResponseRep = BaseResponseRep.<UserSignupRequestVO>builder().Data(userInterface.logOfUser(userSignupRequestVO)).build();
         return baseResponseRep;
     }
-    @RolesAllowed(value="USER")
-    @GetMapping(value="/hello")
-    public String HelloWorld(){
-        final String hello = "hello";
-        return hello;
-    }
-    @RolesAllowed(value="ADMIN")
-    @GetMapping(value="/bye")
-    public String Admin(){
-        final String hello = "Admin";
-        return hello;
-    }
 
-    @GetMapping("/getAll")
+    @RolesAllowed(value = "ADMIN")
+    @GetMapping(value ="/getAll")
     @Authorization(value = "Bearer")
     public BaseResponseRep <List<User>> listAll(){
         BaseResponseRep<List<User>> baseResponseRep= null;
@@ -80,7 +61,6 @@ public class UserController {
         BaseResponseRep<Optional<User>> baseResponseRep= null;
         baseResponseRep = BaseResponseRep.<Optional<User>>builder().Data(userInterface.deletesoft(userDTO)).build();
         return baseResponseRep;
-
     }
 
     @PutMapping("/update")
@@ -93,13 +73,8 @@ public class UserController {
 
     @GetMapping("/pagination/{offset}/{pageSize}/{userName}")
     @Authorization(value = "Bearer")
-    private ApiResponse<User> getUserWithPagination(@PathVariable int offset, @PathVariable int pageSize,@PathVariable String userName){
+    private ApiResponse<User> getUserWithPagination(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String userName){
         return userInterface.GetUserWithPagination(offset, pageSize, userName);
     }
-  /*  @GetMapping("/login")
-    public BaseResponseRep jwt(@RequestBody TokenDTO tokenDTO) {
-        BaseResponseRep baseResponseRep=null;
-        baseResponseRep=BaseResponseRep.builder().Data(userService.Jwt(tokenDTO)).build();
-        return baseResponseRep;
-    }*/
+
 }
